@@ -1,9 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-echo "VERCEL ENV: " . (isset($_ENV['VERCEL']) ? 'YES' : 'NO') . "<br>";
-echo "VERCEL SERVER: " . (isset($_SERVER['VERCEL']) ? 'YES' : 'NO') . "<br>";
-
 
 // Prepare storage directories in /tmp for Vercel serverless environment
 if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
@@ -29,9 +24,5 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
     putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
 }
 
-try {
-    require __DIR__ . '/../public/index.php';
-} catch (\Throwable $e) {
-    echo "<h1>FATAL ERROR CAUGHT IN API/INDEX.PHP</h1>";
-    echo "<pre>" . (string) $e . "</pre>";
-}
+// Forward execution to Laravel entrypoint
+require __DIR__ . '/../public/index.php';
