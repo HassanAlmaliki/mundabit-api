@@ -24,5 +24,10 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
     putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
 }
 
-// Forward execution to Laravel entrypoint
-require __DIR__ . '/../public/index.php';
+try {
+    require __DIR__ . '/../public/index.php';
+} catch (\Throwable $e) {
+    header('HTTP/1.1 500 Internal Server Error');
+    echo "<h1>Exception in api/index.php</h1>";
+    echo "<pre>" . htmlspecialchars((string) $e) . "</pre>";
+}
