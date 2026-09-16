@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 // Prepare storage directories in /tmp for Vercel serverless environment
 if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
