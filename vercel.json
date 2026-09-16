@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": null,
-  "outputDirectory": "public",
+  "buildCommand": "npm run build && mkdir -p dist && echo 'dist' > dist/index.html",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.9.0"
