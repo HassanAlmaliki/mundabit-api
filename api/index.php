@@ -22,6 +22,12 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
     putenv('APP_ROUTES_CACHE=/tmp/bootstrap/cache/routes.php');
     putenv('APP_EVENTS_CACHE=/tmp/bootstrap/cache/events.php');
     putenv('VIEW_COMPILED_PATH=/tmp/storage/framework/views');
+
+    if (empty(getenv('APP_MAINTENANCE_DRIVER'))) {
+        putenv('APP_MAINTENANCE_DRIVER=file');
+        $_ENV['APP_MAINTENANCE_DRIVER'] = 'file';
+        $_SERVER['APP_MAINTENANCE_DRIVER'] = 'file';
+    }
 }
 
 try {
