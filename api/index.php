@@ -28,6 +28,12 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
         $_ENV['APP_MAINTENANCE_DRIVER'] = 'file';
         $_SERVER['APP_MAINTENANCE_DRIVER'] = 'file';
     }
+
+    if (empty(getenv('APP_KEY'))) {
+        putenv('APP_KEY=base64:+XsiCF9dUlCq/2oDq1Ay704c9RLnsKJMoC0MU3IfWN0=');
+        $_ENV['APP_KEY'] = 'base64:+XsiCF9dUlCq/2oDq1Ay704c9RLnsKJMoC0MU3IfWN0=';
+        $_SERVER['APP_KEY'] = 'base64:+XsiCF9dUlCq/2oDq1Ay704c9RLnsKJMoC0MU3IfWN0=';
+    }
 }
 
 try {
