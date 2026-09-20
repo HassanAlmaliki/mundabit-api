@@ -41,6 +41,12 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
         $_SERVER['APP_LOCALE'] = 'ar';
     }
 
+    if (empty(getenv('SESSION_DRIVER'))) {
+        putenv('SESSION_DRIVER=database');
+        $_ENV['SESSION_DRIVER'] = 'database';
+        $_SERVER['SESSION_DRIVER'] = 'database';
+    }
+
     $_SERVER['HTTPS'] = 'on';
     $_SERVER['SERVER_PORT'] = '443';
 }
