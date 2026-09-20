@@ -7,25 +7,24 @@ Route::get('/', function () {
 });
 
 Route::get('/debug-hash', function () {
+    $hasher = app('hash')->driver('bcrypt');
+    $reflection = new ReflectionClass($hasher);
+    $roundsProp = $reflection->getProperty('rounds');
+    $rounds = $roundsProp->getValue($hasher);
+
+    $actualError = null;
     try {
-        $phpHash = password_hash('password123', PASSWORD_BCRYPT);
-        $laravelHash = \Illuminate\Support\Facades\Hash::make('password123');
-        return response()->json([
-            'status' => 'success',
-            'phpHash' => $phpHash,
-            'laravelHash' => $laravelHash,
-            'php_version' => PHP_VERSION,
-            'bcrypt_rounds_env' => getenv('BCRYPT_ROUNDS'),
-            'hashing_config' => config('hashing'),
-        ]);
+        password_hash('test', PASSWORD_BCRYPT, ['cost' => $rounds]);
     } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
+        $actualError = [
+            'msg' => $e->getMessage(),
             'class' => get_class($e),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString(),
-        ]);
+        ];
     }
+
+    return response()->json([
+        'hashing_config' => config('hashing'),
+        'rounds_in_hasher' => $rounds,
+        'cost_test_error' => $actualError,
+    ]);
 });
