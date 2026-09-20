@@ -47,6 +47,24 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
         $_SERVER['SESSION_DRIVER'] = 'database';
     }
 
+    if (empty(getenv('SESSION_LIFETIME')) || (int) getenv('SESSION_LIFETIME') <= 0) {
+        putenv('SESSION_LIFETIME=120');
+        $_ENV['SESSION_LIFETIME'] = '120';
+        $_SERVER['SESSION_LIFETIME'] = '120';
+    }
+
+    if (empty(getenv('SESSION_COOKIE'))) {
+        putenv('SESSION_COOKIE=mundabit_session');
+        $_ENV['SESSION_COOKIE'] = 'mundabit_session';
+        $_SERVER['SESSION_COOKIE'] = 'mundabit_session';
+    }
+
+    if (empty(getenv('APP_NAME'))) {
+        putenv('APP_NAME=mundabit');
+        $_ENV['APP_NAME'] = 'mundabit';
+        $_SERVER['APP_NAME'] = 'mundabit';
+    }
+
     $_SERVER['HTTPS'] = 'on';
     $_SERVER['SERVER_PORT'] = '443';
 }
