@@ -65,6 +65,12 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
         $_SERVER['APP_NAME'] = 'mundabit';
     }
 
+    if (empty(getenv('BCRYPT_ROUNDS')) || (int) getenv('BCRYPT_ROUNDS') <= 0) {
+        putenv('BCRYPT_ROUNDS=12');
+        $_ENV['BCRYPT_ROUNDS'] = '12';
+        $_SERVER['BCRYPT_ROUNDS'] = '12';
+    }
+
     $_SERVER['HTTPS'] = 'on';
     $_SERVER['SERVER_PORT'] = '443';
 }
