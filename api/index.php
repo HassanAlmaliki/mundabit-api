@@ -40,6 +40,48 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
         $_ENV['APP_LOCALE'] = 'ar';
         $_SERVER['APP_LOCALE'] = 'ar';
     }
+
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SERVER_PORT'] = '443';
+}
+
+// Direct static file serving fallback for serverless environment
+$publicPath = realpath(__DIR__ . '/../public');
+$requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$filePath = $publicPath ? realpath($publicPath . $requestUri) : false;
+
+if (
+    $filePath &&
+    $publicPath &&
+    str_starts_with($filePath, $publicPath) &&
+    is_file($filePath) &&
+    $requestUri !== '/index.php'
+) {
+    $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'css'   => 'text/css; charset=utf-8',
+        'js'    => 'application/javascript; charset=utf-8',
+        'mjs'   => 'application/javascript; charset=utf-8',
+        'json'  => 'application/json',
+        'woff2' => 'font/woff2',
+        'woff'  => 'font/woff',
+        'ttf'   => 'font/ttf',
+        'svg'   => 'image/svg+xml',
+        'png'   => 'image/png',
+        'jpg'   => 'image/jpeg',
+        'jpeg'  => 'image/jpeg',
+        'gif'   => 'image/gif',
+        'ico'   => 'image/x-icon',
+        'webp'  => 'image/webp',
+    ];
+
+    $mimeType = $mimeTypes[$extension] ?? 'application/octet-stream';
+    header('Content-Type: ' . $mimeType);
+    header('Access-Control-Allow-Origin: *');
+    header('Cache-Control: public, max-age=31536000, immutable');
+    header('Content-Length: ' . filesize($filePath));
+    readfile($filePath);
+    exit(0);
 }
 
 try {
