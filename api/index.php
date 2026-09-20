@@ -34,6 +34,12 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
         $_ENV['APP_KEY'] = 'base64:+XsiCF9dUlCq/2oDq1Ay704c9RLnsKJMoC0MU3IfWN0=';
         $_SERVER['APP_KEY'] = 'base64:+XsiCF9dUlCq/2oDq1Ay704c9RLnsKJMoC0MU3IfWN0=';
     }
+
+    if (empty(getenv('APP_LOCALE'))) {
+        putenv('APP_LOCALE=ar');
+        $_ENV['APP_LOCALE'] = 'ar';
+        $_SERVER['APP_LOCALE'] = 'ar';
+    }
 }
 
 try {
