@@ -60,10 +60,54 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $user = $request->user();
+        if ($user) {
+            $user->fcm_token = null;
+            $user->save();
+        }
+
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'تم تسجيل الخروج بنجاح.'
+        ]);
+    }
+
+    public function updateFcmToken(Request $request)
+    {
+        $request->validate([
+            'fcm_token' => ['required', 'string'],
+        ]);
+
+        $user = $request->user();
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+
+        return response()->json([
+            'message' => 'FCM token updated successfully',
+        ]);
+    }
+
+    public function sendTestNotification(Request $request, \App\Services\FcmService $fcmService)
+    {
+        $user = $request->user();
+        if (!$user->fcm_token) {
+            return response()->json(['message' => 'User does not have an FCM token.'], 400);
+        }
+
+        $title = $request->input('title', 'إشعار تجريبي من مُنضبِط 🔔');
+        $body = $request->input('body', 'هذا إشعار تجريبي لاختبار نظام الإشعارات.');
+        $data = [
+            'type' => $request->input('type', 'general'),
+            'screen' => $request->input('screen', 'notifications'),
+            'id' => (string) $request->input('id', '1'),
+        ];
+
+        $result = $fcmService->sendToToken($user->fcm_token, $title, $body, $data);
+
+        return response()->json([
+            'message' => 'Notification triggered',
+            'result' => $result,
         ]);
     }
 

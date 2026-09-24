@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'total_salary',
+        'fcm_token',
     ];
 
     /**

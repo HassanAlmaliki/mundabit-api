@@ -14,6 +14,8 @@ Route::post('/login/firebase', [AuthController::class, 'loginWithFirebase']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/fcm-token', [AuthController::class, 'updateFcmToken']);
+    Route::post('/fcm/test', [AuthController::class, 'sendTestNotification']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
